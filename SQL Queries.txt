@@ -1,0 +1,187 @@
+﻿-- get current date and time
+select now()
+
+
+select current_timestamp
+
+
+select current_date
+
+
+select current_time
+
+
+--Change Time Zone
+select current_timestamp at time zone 'Asia/Seoul'
+
+
+-- get partial string
+select substring('Jakarta dan Surabaya', 1, 7)
+
+
+-- Change datatype
+select cast('2020-12-12' as date)
+
+
+-- Create date function
+select make_date(2013, 7, 15)
+
+
+select
+        *
+        , substring(cast(start_date as varchar), 1, 4) as "year"
+        , substring(cast(end_date as varchar), 6, 2) as "month"
+        , substring(cast(end_date as varchar), 9, 2) as "day"
+        , make_date(cast(substring(cast(start_date as varchar), 1, 4) as int),
+                                cast(substring(cast(end_date as varchar), 6, 2) as int),
+                                cast(substring(cast(end_date as varchar), 9, 2) as int)) as new_date
+        , cast(substring(cast(start_date as varchar), 1, 4) || '-' || substring(cast(end_date as varchar), 6, 2) || '-' || substring(cast(end_date as varchar), 9, 2) as date) as new_date2
+from datasource.job_history jh 
+
+
+
+
+-- Get Duration from date part
+select
+        *
+        , date_part('year', end_date) - date_part('year', start_date) as working_duration
+from datasource.job_history jh 
+
+
+
+
+-- Transform to date
+select to_date('2021/01/21','YYYY/MM/DD')
+
+
+-- Transform to character
+SELECT to_char(timestamp '2020-12-16 10:41:35', 'Day') AS "Day";
+
+
+
+
+-- Inner Join
+SELECT
+    employee.employee_id
+    , employee.salary
+    , job.job_title
+FROM datasource.employees employee
+INNER JOIN datasource.jobs job
+    ON employee.job_id= job.job_id;
+   
+-- Inner Join
+SELECT
+    employee.employee_id
+    , employee.salary
+    , job.job_title
+FROM datasource.employees employee
+INNER JOIN datasource.jobs job
+    ON employee.job_id= job.job_id;
+   
+-- Left Join
+SELECT
+    employee.employee_id
+    , employee.salary
+    , job.job_title
+FROM datasource.employees employee
+LEFT JOIN datasource.jobs job
+    ON employee.job_id= job.job_id;
+   
+-- RIGHT Join
+SELECT
+    employee.employee_id
+    , employee.salary
+    , job.job_title
+FROM datasource.employees employee
+RIGHT JOIN datasource.jobs job
+    ON employee.job_id= job.job_id;
+   
+-- FULL OUTER Join
+SELECT
+    employee.employee_id
+    , employee.salary
+    , job.job_title
+FROM datasource.employees employee
+FULL OUTER JOIN datasource.jobs job
+    ON employee.job_id= job.job_id;
+
+
+   
+   
+-- Multiple Left Join
+SELECT
+    *
+FROM datasource.employees employee
+LEFT JOIN datasource.jobs job
+    ON employee.job_id= job.job_id
+LEFT JOIN datasource.employees manager
+        on employee.manager_id = manager.employee_id
+left join datasource.departments depart
+        on manager.department_id = depart.department_id;
+        
+
+
+-- How to validate data from join
+-- 1. Define what one row means
+-- 2. Create Validator table/number from query
+-- 3. Query data to get result
+-- 4. Match Number/Table from Validator and result
+-- 5. If there is mistake, make sure step number 1, 2, 3 are correct 
+
+
+
+
+-- Example of Validating Query data
+
+
+-- Example of validator
+-- Result 107
+select count(distinct employee_id) FROM datasource.employees
+
+
+-- Example of Result Table
+-- Employee 107 = 107
+select
+        count(employee_id)
+from (
+        SELECT
+            employee.employee_id
+        FROM datasource.employees employee
+        LEFT JOIN datasource.jobs job
+            ON employee.job_id= job.job_id
+        LEFT JOIN datasource.employees manager
+                on employee.manager_id = manager.employee_id
+        left join datasource.departments depart
+                on manager.department_id = depart.department_id
+        ) table1
+
+
+        
+-- Inverse Inner Join Technique
+SELECT
+    *
+FROM datasource.employees employee
+FULL OUTER JOIN datasource.jobs job
+    ON employee.job_id= job.job_id
+where employee.employee_id not in (
+        SELECT
+            employee.employee_id
+        FROM datasource.employees employee
+        INNER JOIN datasource.jobs job
+            ON employee.job_id= job.job_id
+        )
+        
+        
+-- Inverse LEFT Join Technique
+SELECT
+    *
+FROM datasource.employees employee
+LEFT JOIN datasource.jobs job
+    ON employee.job_id= job.job_id
+where employee.employee_id not in (
+        SELECT
+            employee.employee_id
+        FROM datasource.employees employee
+        INNER JOIN datasource.jobs job
+            ON employee.job_id= job.job_id
+        )

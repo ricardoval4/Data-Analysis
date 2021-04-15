@@ -1,0 +1,77 @@
+-- Select and From
+-- Select all column from table employee
+SELECT 
+	e.*
+FROM datasource.employees e 
+
+-- Selecting specified column
+SELECT
+	e.employee_id , 
+	e.first_name ,
+	e.last_name ,
+	e.email 
+FROM datasource.employees e 
+
+-- Selecting from Job History Table
+SELECT
+	jh.*
+FROM datasource.job_history jh
+
+
+-- Import Data output
+SELECT
+	*
+FROM learning.job_history jh 
+
+-- Create New Table
+CREATE TABLE learning.siswa_ds_abdul (
+	id INT,
+	nama VARCHAR,
+	birthdate DATE,
+	ktp BIGINT,
+	badge VARCHAR
+)
+
+-- Inserting data
+INSERT INTO learning.siswa_ds_abdul VALUES
+(1,'Bond','1997-01-31',123456789,'Premium'),
+(2,'James','2000-01-01',987654321,'Premium1'),
+(3,'Chris','1996-01-15',123123123,'Premium1')
+
+-- Insert to specified column
+INSERT INTO learning.siswa_ds_abdul (id,nama) VALUES
+(4,'Tryo'),
+(5,'Udin')
+
+-- Access created table
+SELECT
+	*
+FROM learning.siswa_ds_abdul
+
+-- Filling missing value
+UPDATE learning.siswa_ds_abdul
+SET badge = 'Premium'
+WHERE nama = 'Tryo'
+
+-- Add column
+ALTER TABLE learning.siswa_ds_abdul ADD alamat varchar
+
+ALTER TABLE learning.siswa_ds_abdul ADD pekerjaan varchar
+
+
+-- Delete column
+ALTER TABLE learning.siswa_ds_abdul DROP pekerjaan
+
+ALTER TABLE learning.siswa_ds_abdul DROP alamat
+
+-- Delete Row
+DELETE FROM learning.siswa_ds_abdul WHERE birthdate IS NULL
+
+-- Change Column Data Type
+ALTER TABLE learning.siswa_ds_abdul ALTER COLUMN id TYPE bigint
+
+-- Drop Table
+TRUNCATE TABLE learning.siswa_ds_abdul 
+
+-- Drop Table
+DROP TABLE learning.siswa_ds_abdul
